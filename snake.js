@@ -143,9 +143,8 @@ $(document).ready(function() {
             }
         }
     }
-
+    
     update_food()
-
 
     d3.select(window)
         .on("keydown", function(event) {
