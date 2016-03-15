@@ -1,0 +1,19 @@
+rect.snake {
+  fill: #555353;
+}
+
+rect.food {
+  fill: #45720B;
+}
+
+svg, div#container {
+  height: 50vmin;
+  width: 50vmin;
+  position: absolute;
+  top: 0; left: 0; bottom: 0; right: 0;
+  margin: auto;
+}
+
+div#container {
+  border: 4px solid gray;
+}
