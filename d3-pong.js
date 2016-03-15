@@ -45,6 +45,7 @@ function setUpPong() {
         Paddle = function(which) {
             var width = 5,
                 area = svg.append('rect')
+                .style("fill", "transparent")
                 .classed('area', true)
                 .attr({ width: $("svg").width() / 2 }),
                 paddle = svg.append('rect')
@@ -104,7 +105,7 @@ function setUpPong() {
                 score.text(value)
                     .attr({
                         x: $("svg").width() * x,
-                        y: margin.top+20
+                        y: margin.top + 20
                     });
                 return f;
             };
@@ -134,12 +135,13 @@ function setUpPong() {
                     cx: Screen().width / 2,
                     cy: Screen().height / 2
                 }),
-                scale = d3.scale.linear().domain([0, 1]).range([-0.5, 0.5]),
+                scalex = d3.scale.linear().domain([0, 1]).range([-0.5, 0.5]),
+                scaley = d3.scale.linear().domain([0, 1]).range([-0.25, 0.25]),
                 vector = {
-                    x: scale(Math.random()),
-                    y: scale(Math.random())
+                    x: scalex(Math.random()),
+                    y: scaley(Math.random())
                 },
-                speed = 5;
+                speed = 10;
 
             var hit_paddle = function(y, paddle) {
                     return y - R > parse(paddle.attr("y")) && y + R < parse(paddle.attr("y")) + parse(paddle.attr("height"));
@@ -214,7 +216,6 @@ function setUpPong() {
         },
         middle = Middle()(),
         ball = Ball();
-    console.log(left);
 
     // detect window resize events (also captures orientation changes)
     d3.select(window).on('resize', function() {

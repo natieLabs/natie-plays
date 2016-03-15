@@ -12,7 +12,15 @@ function setUpSnake() {
     }, 3000000)
 
 
-    gridsize = 60;
+    gridsize = $("svg").width()/10;
+
+    d3.select(window).on('resize', function() {
+        gridsize = $("svg").width() / 10;
+        var scale = d3.scale.ordinal()
+            .domain(d3.range(gridsize))
+            .rangeRoundBands([0, $('svg').height()], 0.0);
+    });
+
 
     var scale = d3.scale.ordinal()
         .domain(d3.range(gridsize))
@@ -147,7 +155,7 @@ function setUpSnake() {
 
     update_food()
 
-    d3.select(window)
+    d3.select("body")
         .on("keydown", function(event) {
             console.log(d3.event);
             // console.log(d3.event.keyIdentifier);

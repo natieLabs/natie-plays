@@ -22,8 +22,7 @@ rect.food {
     fill: #45720B;
 }
 
-svg,
-div#container {
+svg,div#container {
     height: 50vmin;
     width: 50vmin;
     position: absolute;
