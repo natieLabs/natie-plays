@@ -1,4 +1,5 @@
-$(document).ready(function() {
+function setUpSnake() {
+
     var snake = [{ x: 4, y: 4 }, { x: 3, y: 4 }, { x: 2, y: 4 }];
     var food = [{ x: 1, y: 2 }];
     var direction = { x: 1, y: 0 };
@@ -143,7 +144,7 @@ $(document).ready(function() {
             }
         }
     }
-    
+
     update_food()
 
     d3.select(window)
@@ -157,4 +158,5 @@ $(document).ready(function() {
             d3.event.preventDefault();
             nextMoves.push(candidateDirection);
         });
-})
+
+}

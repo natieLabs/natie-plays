@@ -1,5 +1,6 @@
-(function() {
-    "use strict";
+"use strict";
+
+function setUpPong() {
 
     var svg = d3.select("svg");
     var w = window.innerWidth;
@@ -45,20 +46,22 @@
             var width = 5,
                 area = svg.append('rect')
                 .classed('area', true)
-                .attr({ width: width * 7 }),
+                .attr({ width: $("svg").width() / 2 }),
                 paddle = svg.append('rect')
                 .classed('paddle', true)
                 .classed(which + "_paddle", true)
                 .attr({ width: 5 }),
                 update = function(x, y) {
+                    var x = ((which == "left") ? x : margin.left + $("svg").width() - width);
                     var height = $("svg").height() * 0.25;
                     paddle.attr({
                         x: x,
                         y: y,
                         height: height
                     });
+                    var x = ((which == "left") ? x : x - $("svg").width() / 2);
                     area.attr({
-                        x: x - width * 5 / 2,
+                        x: x,
                         y: y,
                         height: height
                     });
@@ -101,7 +104,7 @@
                 score.text(value)
                     .attr({
                         x: $("svg").width() * x,
-                        y: margin.top * 3
+                        y: margin.top+20
                     });
                 return f;
             };
@@ -112,7 +115,6 @@
 
             return function f() {
                 var screen = Screen();
-                console.log(screen);
                 line.attr({
                     x1: screen.width / 2,
                     y1: margin.top,
@@ -124,7 +126,7 @@
         },
         // generates the ball, returns function to perform animation steps
         Ball = function() {
-            var R = 5,
+            var R = 8,
                 ball = svg.append('circle')
                 .classed("ball", true)
                 .attr({
@@ -132,12 +134,12 @@
                     cx: Screen().width / 2,
                     cy: Screen().height / 2
                 }),
-                scale = d3.scale.linear().domain([0, 1]).range([-1, 1]),
+                scale = d3.scale.linear().domain([0, 1]).range([-0.5, 0.5]),
                 vector = {
                     x: scale(Math.random()),
                     y: scale(Math.random())
                 },
-                speed = 7;
+                speed = 5;
 
             var hit_paddle = function(y, paddle) {
                     return y - R > parse(paddle.attr("y")) && y + R < parse(paddle.attr("y")) + parse(paddle.attr("height"));
@@ -208,20 +210,20 @@
         },
         right = {
             score: Score(0.75)(0),
-            paddle: Paddle("right")($("svg").width() - margin.right-5, $("svg").height() / 2)
+            paddle: Paddle("right")($("svg").width() - margin.right - 5, $("svg").height() / 2)
         },
         middle = Middle()(),
         ball = Ball();
-        console.log(left);
+    console.log(left);
 
     // detect window resize events (also captures orientation changes)
     d3.select(window).on('resize', function() {
         var screen = Screen();
 
         left.score(0);
-        left.paddle(margin.left, $("svg").height()  / 2);
+        left.paddle(margin.left, $("svg").height() / 2);
         right.score(0);
-        right.paddle($("svg").width() - margin.right, $("svg").height()  / 2);
+        right.paddle($("svg").width() - margin.right, $("svg").height() / 2);
 
         middle();
     });
@@ -257,7 +259,6 @@
     function run() {
         var last_time = Date.now();
         d3.timer(function() {
-
             var now = Date.now(),
                 scored = ball(left, right, now - last_time),
                 last_time = now;
@@ -273,6 +274,6 @@
         }, 500);
     };
     run();
-})();
+}
 
 document.body.addEventListener('touchstart', function(e) { e.preventDefault(); });
