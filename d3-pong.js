@@ -147,8 +147,10 @@ function setUpPong() {
                 cx: Screen().width / 2,
                 cy: Screen().height / 2
             }),
+
             scalex = d3.scale.linear().domain([0, 1]).range([-0.5, 0.5]),
             scaley = d3.scale.linear().domain([0, 1]).range([-0.25, 0.25]),
+
             vector = {
                 x: scalex(Math.random()),
                 y: scaley(Math.random())
@@ -270,18 +272,20 @@ function setUpPong() {
     // move right paddle with dumb AI
     function paddleAI(ball) {
         var x_pos = ball.attr("cx");
-        if (x_pos < svg.style("width")) {
+
+        if (x_pos > Screen().width/2) {
             var y_pos = ball.attr("cy");
             var paddle = d3.select(".right_paddle");
             var diff = -((parse(paddle.attr("y")) + (paddle.attr("height") / 2)) - y_pos);
-            if (diff < 0 && diff < -4) { // max speed down
-                diff = -0.1;
-            } else if (diff > 0 && diff > 4) { // max speed up
-                diff = 0.1;
+
+            if (diff < 0 && diff < -2) { // max speed down
+                diff = -2;
+            } else if (diff > 0 && diff > 2) { // max speed up
+                diff = 2;
             }
+
             var currentx = parse(paddle.attr("x"));
             var currenty = parse(paddle.attr("y"));
-            // paddle.update(currentx, currenty + diff);
 
             paddle.attr({
                 y: currenty + diff
