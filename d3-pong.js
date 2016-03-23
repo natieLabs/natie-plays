@@ -1,5 +1,7 @@
 "use strict";
 
+var run;
+
 function setUpPong() {
 
     var svg = d3.select("svg");
@@ -17,7 +19,7 @@ function setUpPong() {
         bottom: parse($("svg").css("marginBottom")),
         left: parse($("svg").css("marginLeft")),
     };
-    console.log(margin);
+
     var currentKeysPressed = [];
 
     // Add support for movement by keys
@@ -36,186 +38,197 @@ function setUpPong() {
 
     // always returns current SVG dimensions
     var Screen = function() {
-            return {
-                width: parse(svg.style("width")),
-                height: parse(svg.style("height"))
-            };
-        },
-        // generates a paddle, returns function for updating its position
-        Paddle = function(which) {
-            var width = 5,
-                area = svg.append('rect')
+        return {
+            width: parse(svg.style("width")),
+            height: parse(svg.style("height"))
+        };
+    };
+    // generates a paddle, returns function for updating its position
+    var Paddle = function(which) {
+        var width = 5;
+
+        var area;
+
+        if (which == "left") {
+            area = svg.append('rect')
                 .style("fill", "transparent")
                 .classed('area', true)
-                .attr({ width: $("svg").width() / 2 }),
-                paddle = svg.append('rect')
-                .classed('paddle', true)
-                .classed(which + "_paddle", true)
-                .attr({ width: 5 }),
-                update = function(x, y) {
-                    var x = ((which == "left") ? x : margin.left + $("svg").width() - width);
-                    var height = $("svg").height() * 0.25;
-                    paddle.attr({
-                        x: x,
-                        y: y,
-                        height: height
-                    });
-                    var x = ((which == "left") ? x : x - $("svg").width() / 2);
-                    area.attr({
-                        x: x,
-                        y: y,
-                        height: height
-                    });
-                    return update;
-                };
+                .attr({ width: $("svg").width() / 2 });
+        }
 
-            // make paddle draggable
-            var drag = d3.behavior.drag()
-                .on("drag", function() {
-                    var y = parse(area.attr("y")),
-                        height = $("svg").height() * 0.25;
+        var paddle = svg.append('rect')
+            .classed('paddle', true)
+            .classed(which + "_paddle", true)
+            .attr({ width: 5 });
 
-                    update(parse(paddle.attr("x")),
-                        Math.max(margin.top,
-                            Math.min(parse(paddle.attr("y")) + d3.event.dy,
-                                $("svg").height() - margin.bottom - height)));
-
-
-                })
-                .origin(function() {
-                    return {
-                        x: parse(area.attr("x")),
-                        y: parse(area.attr("y"))
-                    };
+        function update(x, y) {
+            var x = ((which == "left") ? x : margin.left + $("svg").width() - width);
+            var height = $("svg").height() * 0.25;
+            paddle.attr({
+                x: x,
+                y: y,
+                height: height
+            });
+            // var x = ((which == "left") ? x : x - $("svg").width() / 2);
+            if (which == "left") {
+                area.attr({
+                    x: x,
+                    y: y,
+                    height: height
                 });
-
-            area.call(drag);
+            }
 
             return update;
-        },
-        // generates a score, returns function for updating value and repositioning score
-        Score = function(x) {
-            var value = 0,
-                score = svg.append('text')
-                .text(value);
-
-            return function f(inc) {
-                value += inc;
-
-                score.text(value)
-                    .attr({
-                        x: $("svg").width() * x,
-                        y: margin.top + 20
-                    });
-                return f;
-            };
-        },
-        // generates middle line, returns function for updating position
-        Middle = function() {
-            var line = svg.append('line');
-
-            return function f() {
-                var screen = Screen();
-                line.attr({
-                    x1: screen.width / 2,
-                    y1: margin.top,
-                    x2: screen.width / 2,
-                    y2: screen.height - margin.bottom
-                });
-                return f;
-            };
-        },
-        // generates the ball, returns function to perform animation steps
-        Ball = function() {
-            var R = 8,
-                ball = svg.append('circle')
-                .classed("ball", true)
-                .attr({
-                    r: R,
-                    cx: Screen().width / 2,
-                    cy: Screen().height / 2
-                }),
-                scalex = d3.scale.linear().domain([0, 1]).range([-0.5, 0.5]),
-                scaley = d3.scale.linear().domain([0, 1]).range([-0.25, 0.25]),
-                vector = {
-                    x: scalex(Math.random()),
-                    y: scaley(Math.random())
-                },
-                speed = 10;
-
-            var hit_paddle = function(y, paddle) {
-                    return y - R > parse(paddle.attr("y")) && y + R < parse(paddle.attr("y")) + parse(paddle.attr("height"));
-                },
-                collisions = function() {
-                    var x = parse(ball.attr("cx")),
-                        y = parse(ball.attr("cy")),
-                        left_p = d3.select(".left_paddle"),
-                        right_p = d3.select(".right_paddle");
-
-                    // collision with top or bottom
-                    if (y - R < margin.top || y + R > Screen().height - margin.bottom) {
-                        vector.y = -vector.y;
-                    }
-
-                    // bounce off right paddle or score
-                    if (x + R > parse(right_p.attr("x"))) {
-                        if (hit_paddle(y, right_p)) {
-                            vector.x = -vector.x;
-                        } else {
-                            return "left";
-                        }
-                    }
-
-                    // bounce off left paddle or score
-                    if (x - R <
-                        parse(left_p.attr("x")) + parse(left_p.attr("width"))) {
-                        if (hit_paddle(y, left_p)) {
-                            vector.x = -vector.x;
-                        } else {
-                            return "right";
-                        }
-                    }
-
-                    return false;
-                };
-
-            return function f(left, right, delta_t) {
-                var screen = Screen(),
-                    // this should pretend we have 100 fps
-                    fps = delta_t > 0 ? (delta_t / 1000) / 100 : 1;
-
-                ball.attr({
-                    cx: parse(ball.attr("cx")) + vector.x * speed * fps,
-                    cy: parse(ball.attr("cy")) + vector.y * speed * fps
-                });
-
-                var scored = collisions();
-
-                if (scored) {
-                    if (scored == "left") {
-                        left.score(1);
-                    } else {
-                        right.score(1);
-                    }
-                    return true;
-                }
-
-                return false;
-            };
         };
+
+        // make paddle draggable
+        var drag = d3.behavior.drag()
+            .on("drag", function() {
+                var y = parse(area.attr("y")),
+                    height = $("svg").height() * 0.25;
+
+                update(parse(paddle.attr("x")),
+                    Math.max(margin.top,
+                        Math.min(parse(paddle.attr("y")) + d3.event.dy,
+                            $("svg").height() - margin.bottom - height)));
+
+
+            })
+            .origin(function() {
+                return {
+                    x: parse(area.attr("x")),
+                    y: parse(area.attr("y"))
+                };
+            });
+
+        if (which == "left") { area.call(drag) };
+
+        return update;
+    };
+    // generates a score, returns function for updating value and repositioning score
+    function Score(x) {
+        var value = 0,
+            score = svg.append('text')
+            .text(value);
+
+        return function f(inc) {
+            value += inc;
+
+            score.text(value)
+                .attr({
+                    x: $("svg").width() * x,
+                    y: margin.top + 20
+                });
+            return f;
+        };
+    };
+    // generates middle line, returns function for updating position
+    function Middle() {
+        var line = svg.append('line');
+
+        return function f() {
+            var screen = Screen();
+            line.attr({
+                x1: screen.width / 2,
+                y1: margin.top,
+                x2: screen.width / 2,
+                y2: screen.height - margin.bottom
+            });
+            return f;
+        };
+    };
+    // generates the ball, returns function to perform animation steps
+    function Ball() {
+        var R = 8,
+            ball = svg.append('circle')
+            .classed("ball", true)
+            .attr({
+                r: R,
+                cx: Screen().width / 2,
+                cy: Screen().height / 2
+            }),
+            scalex = d3.scale.linear().domain([0, 1]).range([-0.5, 0.5]),
+            scaley = d3.scale.linear().domain([0, 1]).range([-0.25, 0.25]),
+            vector = {
+                x: scalex(Math.random()),
+                y: scaley(Math.random())
+            },
+            speed = 10;
+
+        var hit_paddle = function(y, paddle) {
+            return y - R > parse(paddle.attr("y")) && y + R < parse(paddle.attr("y")) + parse(paddle.attr("height"));
+        };
+        var collisions = function() {
+            var x = parse(ball.attr("cx")),
+                y = parse(ball.attr("cy")),
+                left_p = d3.select(".left_paddle"),
+                right_p = d3.select(".right_paddle");
+
+            // collision with top or bottom
+            if (y - R < margin.top || y + R > Screen().height - margin.bottom) {
+                vector.y = -vector.y;
+            }
+
+            // bounce off right paddle or score
+            if (x + R > parse(right_p.attr("x"))) {
+                if (hit_paddle(y, right_p)) {
+                    vector.x = -vector.x;
+                } else {
+                    return "left";
+                }
+            }
+
+            // bounce off left paddle or score
+            if (x - R <
+                parse(left_p.attr("x")) + parse(left_p.attr("width"))) {
+                if (hit_paddle(y, left_p)) {
+                    vector.x = -vector.x;
+                } else {
+                    return "right";
+                }
+            }
+
+            return false;
+        };
+
+        return function f(left, right, delta_t) {
+            var screen = Screen(),
+                // this should pretend we have 100 fps
+                fps = delta_t > 0 ? (delta_t / 1000) / 100 : 1;
+
+            ball.attr({
+                cx: parse(ball.attr("cx")) + vector.x * speed * fps,
+                cy: parse(ball.attr("cy")) + vector.y * speed * fps
+            });
+
+            paddleAI(ball);
+
+            var scored = collisions();
+
+            if (scored) {
+                if (scored == "left") {
+                    left.score(1);
+                } else {
+                    right.score(1);
+                }
+                return true;
+            }
+            return false;
+        };
+    };
 
 
     // generate starting scene
     var left = {
-            score: Score(0.25)(0),
-            paddle: Paddle("left")(margin.left, $("svg").height() / 2)
-        },
-        right = {
-            score: Score(0.75)(0),
-            paddle: Paddle("right")($("svg").width() - margin.right - 5, $("svg").height() / 2)
-        },
-        middle = Middle()(),
-        ball = Ball();
+        score: Score(0.25)(0),
+        paddle: Paddle("left")(margin.left, $("svg").height() / 2)
+    };
+    var right = {
+        score: Score(0.75)(0),
+        paddle: Paddle("right")($("svg").width() - margin.right - 5, $("svg").height() / 2)
+    };
+    var middle = Middle()();
+    var ball = Ball();
 
     // detect window resize events (also captures orientation changes)
     d3.select(window).on('resize', function() {
@@ -243,8 +256,8 @@ function setUpPong() {
             if (currentKeyPressed && [38, 40, 83, 87].indexOf(currentKeyPressed) != -1) {
                 var leftPaddle = [83, 87].indexOf(currentKeyPressed) != -1;
                 var directionUp = [38, 87].indexOf(currentKeyPressed) != -1;
-                var paddleClass = leftPaddle ? '.left_paddle' : '.right_paddle';
-                var paddle = d3.select(paddleClass);
+                // var paddleClass = leftPaddle ? '.left_paddle' : '.right_paddle';
+                var paddle = d3.select(leftPaddle);
                 var paddleDy = 10 * (directionUp ? -1 : 1);
                 var newPaddleY = Math.max(margin.top,
                     Math.min(parse(paddle.attr("y")) + paddleDy,
@@ -255,9 +268,32 @@ function setUpPong() {
         }
     }
 
+    // move right paddle with dumb AI
+    function paddleAI(ball) {
+        var y_pos = ball.attr("cy");
+        var paddle = d3.select(".right_paddle");
+        var diff = -((paddle.attr("y") + (paddle.attr("height") / 2)) - y_pos);
+        if (diff < 0 && diff < -4) { // max speed down
+            diff = -5;
+        } else if (diff > 0 && diff > 4) { // max speed up
+            diff = 5;
+        }
+        var currentx = parse(paddle.attr("x"));
+        var currenty = parse(paddle.attr("y"));
+        // paddle.update(currentx, currenty + diff);
+        paddle.attr({
+            y: currenty + diff
+        });
+        // if (y + diff < 0) {
+        //     paddle.x = 0;
+        // } else if (this.paddle.x + this.paddle.width > 400) {
+        //     this.paddle.x = 400 - this.paddle.width;
+        // }
+    }
+
     // start animation timer that runs until a player scores
     // then reset ball and start again
-    function run() {
+    run = function() {
         var last_time = Date.now();
         d3.timer(function() {
             var now = Date.now(),
@@ -265,6 +301,7 @@ function setUpPong() {
                 last_time = now;
 
             movePaddle();
+
 
             if (scored) {
                 d3.select(".ball").remove();
@@ -274,7 +311,8 @@ function setUpPong() {
             return scored;
         }, 500);
     };
-    run();
-}
 
-document.body.addEventListener('touchstart', function(e) { e.preventDefault(); });
+    run();
+
+}
+// $("body").addEventListener('touchstart', function(e) { e.preventDefault(); });

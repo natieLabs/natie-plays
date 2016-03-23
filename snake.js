@@ -1,21 +1,22 @@
+var snake, food, direction, nextMoves, interval_id, gridsize;
+
 function setUpSnake() {
 
-    var snake = [{ x: 4, y: 4 }, { x: 3, y: 4 }, { x: 2, y: 4 }];
-    var food = [{ x: 1, y: 2 }];
-    var direction = { x: 1, y: 0 };
-    var nextMoves = [];
+    snake = [{ x: 4, y: 4 }, { x: 3, y: 4 }, { x: 2, y: 4 }];
+    food = [{ x: 1, y: 2 }];
+    direction = { x: 1, y: 0 };
+    nextMoves = [];
 
-    var interval_id = setInterval(tick, 100)
+    interval_id = setInterval(tick, 100)
 
     setTimeout(function() {
         for (i = 0; i < 10000; ++i) clearInterval(i)
     }, 3000000)
 
 
-    gridsize = $("svg").width()/10;
+    gridsize = $("svg").width() / 10;
 
     d3.select(window).on('resize', function() {
-        gridsize = $("svg").width() / 10;
         var scale = d3.scale.ordinal()
             .domain(d3.range(gridsize))
             .rangeRoundBands([0, $('svg').height()], 0.0);

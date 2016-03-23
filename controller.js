@@ -5,6 +5,7 @@ $(function() {
     $("#switch").on("click", switchGame);
 
     function switchGame() {
+    	clearInterval(interval_id);
     	$("body").unbind("keydown");
         CURRENT_GAME = 1 - CURRENT_GAME;
         d3.selectAll("svg > *").remove();
