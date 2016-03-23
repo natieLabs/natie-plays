@@ -254,15 +254,14 @@ function setUpPong() {
              *   40 = Down Arrow
              */
             if (currentKeyPressed && [38, 40, 83, 87].indexOf(currentKeyPressed) != -1) {
-                var leftPaddle = [83, 87].indexOf(currentKeyPressed) != -1;
+                // var leftPaddle = [83, 87].indexOf(currentKeyPressed) != -1;
                 var directionUp = [38, 87].indexOf(currentKeyPressed) != -1;
-                // var paddleClass = leftPaddle ? '.left_paddle' : '.right_paddle';
-                var paddle = d3.select(leftPaddle);
-                var paddleDy = 10 * (directionUp ? -1 : 1);
+                var paddle = d3.select(".left_paddle");
+                var paddleDy = 5 * (directionUp ? -1 : 1);
                 var newPaddleY = Math.max(margin.top,
                     Math.min(parse(paddle.attr("y")) + paddleDy,
                         Screen().height - margin.bottom - Screen().height * 0.1));
-                var paddleInstance = leftPaddle ? left : right;
+                var paddleInstance = left;
                 paddleInstance.paddle(parse(paddle.attr('x')), newPaddleY);
             }
         }

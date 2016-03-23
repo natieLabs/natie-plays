@@ -1,7 +1,7 @@
 var snake, food, direction, nextMoves, interval_id, gridsize;
 
 function setUpSnake() {
-
+    var svg = d3.select('svg');
     snake = [{ x: 4, y: 4 }, { x: 3, y: 4 }, { x: 2, y: 4 }];
     food = [{ x: 1, y: 2 }];
     direction = { x: 1, y: 0 };
@@ -12,7 +12,6 @@ function setUpSnake() {
     setTimeout(function() {
         for (i = 0; i < 10000; ++i) clearInterval(i)
     }, 3000000)
-
 
     gridsize = $("svg").width() / 10;
 
@@ -28,7 +27,7 @@ function setUpSnake() {
         .rangeRoundBands([0, $('svg').height()], 0.0);
 
     function update_snake() {
-        var svg = d3.select('svg');
+
         var cells = svg.selectAll('rect.snake')
             .data(snake, function(d) {
                 return JSON.stringify(d)
@@ -156,10 +155,9 @@ function setUpSnake() {
 
     update_food()
 
-    d3.select("body")
-        .on("keydown", function(event) {
+    $(window).keydown(function(event) {
             console.log(d3.event);
-            // console.log(d3.event.keyIdentifier);
+            console.log(d3.event.keyIdentifier);
             var candidateDirection = directionMap[d3.event.keyCode];
             if (!candidateDirection || is_opposite(candidateDirection, direction)) {
                 return;

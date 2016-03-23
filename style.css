@@ -22,7 +22,8 @@ rect.food {
     fill: #45720B;
 }
 
-svg,div#container {
+svg,
+div#container {
     height: 50vmin;
     width: 50vmin;
     position: absolute;
@@ -33,13 +34,20 @@ svg,div#container {
     margin: auto;
 }
 
-div#container {
+
+/*div#container {
     border: 4px solid gray;
+}
+*/
+
+.border {
+    pointer-events: none;
 }
 
 html,
 body,
 main {
+    background-color: #f2f2f2;
     height: 100%;
     padding: 0;
     margin: 0;
