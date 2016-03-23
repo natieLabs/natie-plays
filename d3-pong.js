@@ -269,26 +269,24 @@ function setUpPong() {
 
     // move right paddle with dumb AI
     function paddleAI(ball) {
-        var y_pos = ball.attr("cy");
-        var paddle = d3.select(".right_paddle");
-        var diff = -((parse(paddle.attr("y")) + (paddle.attr("height") / 2)) - y_pos);
-        if (diff < 0 && diff < -4) { // max speed down
-            diff = -0.75;
-        } else if (diff > 0 && diff > 4) { // max speed up
-            diff = 0.75;
-        }
-        var currentx = parse(paddle.attr("x"));
-        var currenty = parse(paddle.attr("y"));
-        // paddle.update(currentx, currenty + diff);
+        var x_pos = ball.attr("cx");
+        if (x_pos < svg.style("width")) {
+            var y_pos = ball.attr("cy");
+            var paddle = d3.select(".right_paddle");
+            var diff = -((parse(paddle.attr("y")) + (paddle.attr("height") / 2)) - y_pos);
+            if (diff < 0 && diff < -4) { // max speed down
+                diff = -0.1;
+            } else if (diff > 0 && diff > 4) { // max speed up
+                diff = 0.1;
+            }
+            var currentx = parse(paddle.attr("x"));
+            var currenty = parse(paddle.attr("y"));
+            // paddle.update(currentx, currenty + diff);
 
-        paddle.attr({
-            y: currenty + diff
-        });
-        // if (y + diff < 0) {
-        //     paddle.x = 0;
-        // } else if (this.paddle.x + this.paddle.width > 400) {
-        //     this.paddle.x = 400 - this.paddle.width;
-        // }
+            paddle.attr({
+                y: currenty + diff
+            });
+        }
     }
 
     // start animation timer that runs until a player scores
