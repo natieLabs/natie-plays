@@ -272,15 +272,16 @@ function setUpPong() {
     function paddleAI(ball) {
         var y_pos = ball.attr("cy");
         var paddle = d3.select(".right_paddle");
-        var diff = -((paddle.attr("y") + (paddle.attr("height") / 2)) - y_pos);
+        var diff = -((parse(paddle.attr("y")) + (paddle.attr("height") / 2)) - y_pos);
         if (diff < 0 && diff < -4) { // max speed down
-            diff = -5;
+            diff = -0.75;
         } else if (diff > 0 && diff > 4) { // max speed up
-            diff = 5;
+            diff = 0.75;
         }
         var currentx = parse(paddle.attr("x"));
         var currenty = parse(paddle.attr("y"));
         // paddle.update(currentx, currenty + diff);
+
         paddle.attr({
             y: currenty + diff
         });
