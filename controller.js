@@ -1,3 +1,7 @@
+/* controller for the whole system
+currently switches between the two games onclick
+*/
+
 $(function() {
     setUpPong();
     var CURRENT_GAME = 0;

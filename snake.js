@@ -7,8 +7,8 @@ function setUpSnake() {
     direction = { x: 1, y: 0 };
     nextMoves = [];
 
-    interval_id = setInterval(tick, 100)
-
+    // create interval timer
+    interval_id = setInterval(tick, 100);
     setTimeout(function() {
         for (i = 0; i < 10000; ++i) clearInterval(i)
     }, 3000000)
@@ -27,7 +27,6 @@ function setUpSnake() {
         .rangeRoundBands([0, $('svg').height()], 0.0);
 
     function update_snake() {
-
         var cells = svg.selectAll('rect.snake')
             .data(snake, function(d) {
                 return JSON.stringify(d)
@@ -52,6 +51,7 @@ function setUpSnake() {
         return (p1.x === p2.x) && (p1.y === p2.y);
     }
 
+    // array helper functions
     Array.prototype.contains_point = function(obj) {
         var i = this.length;
         while (i--) {
@@ -73,7 +73,7 @@ function setUpSnake() {
     }
 
     function add_pairs(p1, p2) {
-        return { x: p1.x + p2.x, y: p1.y + p2.y }
+        return { x: p1.x + p2.x, y: p1.y + p2.y };
     }
 
     function outside_boundaries(point) {
@@ -165,5 +165,4 @@ function setUpSnake() {
             d3.event.preventDefault();
             nextMoves.push(candidateDirection);
         });
-
 }
