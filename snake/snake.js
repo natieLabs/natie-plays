@@ -1,11 +1,26 @@
 var snake, food, direction, nextMoves, interval_id, gridsize;
 
+$(function() {
+    setUpSnake();
+
+})
+
+
 function setUpSnake() {
     var svg = d3.select('svg');
     snake = [{ x: 4, y: 4 }, { x: 3, y: 4 }, { x: 2, y: 4 }];
     food = [{ x: 1, y: 2 }];
     direction = { x: 1, y: 0 };
     nextMoves = [];
+
+    // draw border
+    svg.append("rect")
+        .attr("class", "border")
+        .attr("width", "100%")
+        .attr("height", "100%")
+        .style("stroke", "gray")
+        .style("fill", "transparent")
+        .style("border", "4px");
 
     // create interval timer
     interval_id = setInterval(tick, 100);
@@ -155,14 +170,18 @@ function setUpSnake() {
 
     update_food()
 
-    $(window).keydown(function(event) {
-            console.log(d3.event);
-            console.log(d3.event.keyIdentifier);
-            var candidateDirection = directionMap[d3.event.keyCode];
-            if (!candidateDirection || is_opposite(candidateDirection, direction)) {
-                return;
-            }
-            d3.event.preventDefault();
-            nextMoves.push(candidateDirection);
-        });
+    d3.select("body").on("keydown", function() {
+        console.log(d3.event.keyCode);
+        console.log(d3.event);
+        console.log(d3.event.keyIdentifier);
+        var candidateDirection = directionMap[d3.event.keyCode];
+        if (!candidateDirection || is_opposite(candidateDirection, direction)) {
+            return;
+        }
+        d3.event.preventDefault();
+        nextMoves.push(candidateDirection);
+
+    })
+
+
 }

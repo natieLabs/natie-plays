@@ -1,6 +1,9 @@
 "use strict";
 
 var run;
+$(function() {
+    setUpPong();
+})
 
 function setUpPong() {
 
@@ -8,6 +11,14 @@ function setUpPong() {
     var w = window.innerWidth;
     var h = window.innerHeight;
     var vmin = Math.min(w, h);
+
+    svg.append("rect")
+        .attr("class", "border")
+        .attr("width", "100%")
+        .attr("height", "100%")
+        .style("stroke", "gray")
+        .style("fill", "transparent")
+        .style("border", "4px");
 
     var parse = function(N) {
         return Number(N.replace("px", ""));
@@ -273,7 +284,7 @@ function setUpPong() {
     function paddleAI(ball) {
         var x_pos = ball.attr("cx");
 
-        if (x_pos > Screen().width/2) {
+        if (x_pos > Screen().width / 2) {
             var y_pos = ball.attr("cy");
             var paddle = d3.select(".right_paddle");
             var diff = -((parse(paddle.attr("y")) + (paddle.attr("height") / 2)) - y_pos);
@@ -315,6 +326,7 @@ function setUpPong() {
     };
 
     run();
-
 }
+
+
 // $("body").addEventListener('touchstart', function(e) { e.preventDefault(); });
