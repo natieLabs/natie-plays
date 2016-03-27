@@ -28,7 +28,8 @@ function setUpSnake() {
         .style("border", "4px");
 
     // create interval timer
-    interval_id = setInterval(tick, 100);
+    var counter = 100;
+    interval_id = setInterval(tick, counter);
     setTimeout(function() {
         for (i = 0; i < 10000; ++i) clearInterval(i)
     }, 3000000)
@@ -40,7 +41,6 @@ function setUpSnake() {
             .domain(d3.range(gridsize))
             .rangeRoundBands([0, $('svg').height()], 0.0);
     });
-
 
     var scale = d3.scale.ordinal()
         .domain(d3.range(gridsize))
@@ -115,6 +115,9 @@ function setUpSnake() {
             make_new_food();
             update_food();
             update_snake();
+            clearInterval(interval_id);
+            counter =  counter*0.9;
+            interval_id = setInterval(tick, counter);
         } else {
             snake.pop();
             snake.unshift(new_beginning);
