@@ -1,17 +1,22 @@
-var snake, food, direction, nextMoves, interval_id, gridsize;
+var svg, snake, food, direction, nextMoves, interval_id, gridsize;
 
+// when page loaded, set up snake game
 $(function() {
+    svg = d3.select('svg');
     setUpSnake();
-
 })
 
-
 function setUpSnake() {
-    var svg = d3.select('svg');
+
     snake = [{ x: 4, y: 4 }, { x: 3, y: 4 }, { x: 2, y: 4 }];
     food = [{ x: 1, y: 2 }];
     direction = { x: 1, y: 0 };
     nextMoves = [];
+
+    var side = Math.round(Math.min($(window).width(), $(window).height()) / 20) * 10;
+
+    svg.style('width', side);
+    svg.style('height', side);
 
     // draw border
     svg.append("rect")
@@ -171,9 +176,6 @@ function setUpSnake() {
     update_food()
 
     d3.select("body").on("keydown", function() {
-        console.log(d3.event.keyCode);
-        console.log(d3.event);
-        console.log(d3.event.keyIdentifier);
         var candidateDirection = directionMap[d3.event.keyCode];
         if (!candidateDirection || is_opposite(candidateDirection, direction)) {
             return;
@@ -182,6 +184,13 @@ function setUpSnake() {
         nextMoves.push(candidateDirection);
 
     })
-
-
 }
+
+function resize() {
+    var side = Math.round(Math.min($(window).width(), $(window).height()) / 20) * 10;
+    svg.style('width', side);
+    svg.style('height', side);
+    gridsize = $("svg").width() / 10;
+}
+
+$(window).on("resize", resize);
