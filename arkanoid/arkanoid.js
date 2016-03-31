@@ -83,7 +83,7 @@ $(function() {
     var ball = $("#ball");
 
     const r = 5;
-    const PADDLE_WIDTH = side/5;
+    const PADDLE_WIDTH = side / 5;
     const PADDLE_TOP = paddle.position().top;
     const PADDLE_BOTTOM = PADDLE_TOP + paddle.height();
 
@@ -108,7 +108,7 @@ $(function() {
             dx *= -1;
         }
         // hits paddle
-        if (bx + r >= px && bx <= px + PADDLE_WIDTH && by >= PADDLE_TOP - 2 && by <= PADDLE_BOTTOM - 2) {
+        if (bx >= px && bx <= px + PADDLE_WIDTH && by+2*r >= PADDLE_TOP && by < PADDLE_BOTTOM) {
             dy *= -1;
             if (bx <= px + PADDLE_WIDTH / 4) { // hits left half, move left
                 dx = -6;
@@ -161,7 +161,9 @@ $(function() {
     }, 1000 / 60);
 
     document.addEventListener('mousemove', function(e) {
-        px = (e.pageX > xmin + $("#paddle").width() / 2) ? ((e.pageX < xmax - $("#paddle").width() / 2) ? e.pageX - xmin - $("#paddle").width() / 2 : xmax - xmin - $("#paddle").width()) : 0;
+        var left_bound = xmin + $("#paddle").width() / 2;
+        var right_bound = xmax - $("#paddle").width() / 2;
+        px = (e.pageX > left_bound) ? ((e.pageX < right_bound) ? e.pageX - left_bound : xmax - xmin - $("#paddle").width()) : 0;
         $("#paddle").css({ left: px });
     }, false);
 
