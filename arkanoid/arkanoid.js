@@ -1,4 +1,6 @@
 $(function() {
+
+    // object for set of bricks
     var bricks = {
         NUM_BRICKS: 50,
         BRICKS_PER_ROW: 10,
@@ -11,8 +13,14 @@ $(function() {
         baseline: null,
 
         init: function() {
+            var rainbow = new Rainbow();
+            var rows = ~~(this.NUM_BRICKS / this.BRICKS_PER_ROW);
+            rainbow.setNumberRange(1, rows);
+            rainbow.setSpectrum("#2d1d25", "#ff1d25")
+
             for (var i = 0; i < this.NUM_BRICKS; i++) {
-                container.append('<div class="brick" id="brick' + i + '"></div>')
+                var row = ~~(i / this.BRICKS_PER_ROW);
+                container.append('<div class="brick" id="brick' + i + '" style="background-color: #' + rainbow.colourAt(row) + '"></div>')
             }
             this.side = container.width();
             this.array = container.children(".brick");
@@ -21,37 +29,45 @@ $(function() {
             $(".brick").width(this.width);
             this.baseline = this.array.last().position().top + this.array.last().height();
             this.outerHeight = this.height + this.BRICK_MARGIN * 2;
+
+
+
         },
 
         get: function(r, c) {
             var index = r * this.BRICKS_PER_ROW + c;
             return $("#brick" + index);
         },
-
     }
 
-    function collision($div1, $div2) {
-        var x1 = $div1.offset().left;
-        var y1 = $div1.offset().top;
-        var h1 = $div1.outerHeight(true);
-        var w1 = $div1.outerWidth(true);
-        var b1 = y1 + h1;
-        var r1 = x1 + w1;
-        var x2 = $div2.offset().left;
-        var y2 = $div2.offset().top;
-        var h2 = $div2.outerHeight(true);
-        var w2 = $div2.outerWidth(true);
-        var b2 = y2 + h2;
-        var r2 = x2 + w2;
+    // var ball = {
+    //     R: 5,
+    //     bx: 0,
+    //     by: 0,
+    //     dx: -4,
+    //     dy: -4,
+    //     self: $("#ball"),
 
-        if (b1 < y2 || y1 > b2 || r1 < x2 || x1 > r2) return false;
-        return true;
-    }
+    //     init: function() {
+    //       self.width(2*r);
+    //       self.height(2*r);
+    //     },
 
-    var container = null;
+    //     put: function(x, y){
+    //       // self.position().top;
+    //       ball.css({ left: x, top: y });
+    //       this.bx = x;
+    //       thix.by = y;
+    //     }
 
+    //     update: function(){
+    //       this.bx = (this.bx + dx) | 0;
+    //       this.by = (this.by + dy) | 0;
+    //       put(this.bx, this.by);
+    //     }
+    // }
 
-    container = $("#container");
+    var container = $("#container");
     var xmin = container.offset().left;
     var xmax = container.offset().left + container.width();
     var side = container.width();
@@ -67,7 +83,7 @@ $(function() {
     var ball = $("#ball");
 
     const r = 5;
-    const PADDLE_WIDTH = 60;
+    const PADDLE_WIDTH = side/5;
     const PADDLE_TOP = paddle.position().top;
     const PADDLE_BOTTOM = PADDLE_TOP + paddle.height();
 
@@ -76,16 +92,6 @@ $(function() {
     ball.width(2 * r);
     ball.height(2 * r);
     paddle.width(PADDLE_WIDTH);
-
-    // $(".brick").click(function(e) {
-    //     container = $("#container");
-    //     var clickx = e.pageX - container.offset().left;
-    //     var clicky = e.pageY - container.offset().top;
-    //     var row = ( (clicky - 10) / bricks.outerHeight) | 0;
-    //     var col = ~~(clickx / bricks.widthWithMargin);
-    //     console.log(clickx, clicky, row, col);
-    //     bricks.get(row, col).addClass('removed');
-    // })
 
     var cycle = setInterval(function() {
         bx = (ball.position().left + dx) | 0;
@@ -133,7 +139,6 @@ $(function() {
         if (by >= 0 && by < bricks.baseline) {
 
             var isRemoved = bricks.get(row, col).hasClass("removed");
-            // console.log(bricks.get(row, col), isRemoved);
             if (!isRemoved) {
                 dy *= -1;
                 bricks.get(row, col).addClass('removed');
@@ -156,7 +161,7 @@ $(function() {
     }, 1000 / 60);
 
     document.addEventListener('mousemove', function(e) {
-        px = (e.pageX > xmin + $("#paddle").width() / 2) ? ((e.pageX < xmax) ? e.pageX - xmin - $("#paddle").width() / 2 : xmax - xmin - $("#paddle").width()) : 0;
+        px = (e.pageX > xmin + $("#paddle").width() / 2) ? ((e.pageX < xmax - $("#paddle").width() / 2) ? e.pageX - xmin - $("#paddle").width() / 2 : xmax - xmin - $("#paddle").width()) : 0;
         $("#paddle").css({ left: px });
     }, false);
 

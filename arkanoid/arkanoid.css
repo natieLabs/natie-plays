@@ -10,28 +10,8 @@ div#container {
 }
 
 .brick {
-    background-color: rgb(122, 201, 67);
     /*border-color: #777;*/
     border-radius: 2px;
-}
-
-.brick:nth-child(2n) {
-    background-color: rgb(0, 113, 188);
-}
-
-.brick:nth-child(3n) {
-    background-color: rgb(41, 171, 226);
-}
-.brick:nth-child(5n) {
-    background-color: rgb(255, 147, 30);
-}
-
-.brick:nth-child(7n) {
-    background-color: rgb(133, 96, 168);
-}
-
-.brick:nth-child(11n) {
-    background-color: rgb(204, 204, 204);
 }
 
 .removed {
