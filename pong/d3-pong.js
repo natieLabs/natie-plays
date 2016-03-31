@@ -165,7 +165,6 @@ function setUpPong() {
             if (Math.random() < 0.5) {
                 abs = -1 * abs;
             }
-            console.log(abs);
             return abs
         }
         var vector = {

@@ -15,7 +15,7 @@ body {
 }
 
 rect.snake {
-    fill: #555353;
+    fill: #ff1d25;
 }
 
 rect.food {
