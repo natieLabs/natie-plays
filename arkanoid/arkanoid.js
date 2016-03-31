@@ -71,6 +71,9 @@ $(function() {
     var xmin = container.offset().left;
     var xmax = container.offset().left + container.width();
     var side = container.width();
+    var top = container.offset().top;
+
+    $(".buttons").offset({ left: xmax + 10, top: top })
 
     var px = 129,
         dx = -4,
@@ -79,6 +82,7 @@ $(function() {
         score = 0,
         bx = by = 0;
 
+    $("#lifesNode").html(lifes);
     var paddle = $("#paddle");
     var ball = $("#ball");
 
@@ -108,7 +112,7 @@ $(function() {
             dx *= -1;
         }
         // hits paddle
-        if (bx >= px && bx <= px + PADDLE_WIDTH && by+2*r >= PADDLE_TOP && by < PADDLE_BOTTOM) {
+        if (bx >= px && bx <= px + PADDLE_WIDTH && by + 2 * r >= PADDLE_TOP && by < PADDLE_BOTTOM) {
             dy *= -1;
             if (bx <= px + PADDLE_WIDTH / 4) { // hits left half, move left
                 dx = -6;
@@ -123,14 +127,14 @@ $(function() {
         if (by <= 0) { dy *= -1; }
 
         // check game ends
-        if (by >= side - r && !--lifes) {
+        if (by >= side - r * 2 && !--lifes) {
             $("#lifesNode").html(lifes);
             clearInterval(cycle);
             // alert('Game over!');
         };
 
         // hits bottom
-        if (by >= side - r && lifes) {
+        if (by >= side - r * 2 && lifes) {
             dy *= -1;
             $("#lifesNode").html(lifes);
         }
@@ -150,21 +154,37 @@ $(function() {
                 if (dx > 0 && ((bx + r + 2) % bricks.widthWithMargin < r || (bx + r + 2) % bricks.widthWithMargin > (r * 2 + 2))) {
                     dx *= -1;
                 }
-                $("#scoreNode").innerHTML = ++score;
+                $("#scoreNode").html(++score);
+
+                //YOU WIN
                 if (score == bricks.NUM_BRICKS) {
                     clearInterval(cycle);
-                    // alert('Victory!');
+
                 };
             }
 
         }
     }, 1000 / 60);
 
-    document.addEventListener('mousemove', function(e) {
+    // document.addEventListener('mousemove', function(e) {
+    //     handleMove(e);
+    // });
+
+    // document.addEventListener('touchmove', function(e) {
+    //   handleMove(e);
+    // });
+
+    $(document).bind("mousemove touchmove", function(e) {
+        handleMove(e);
+    })
+
+    function handleMove(e) {
+        var x = (e.type == "mousemove") ? e.pageX : e.originalEvent.touches[0].pageX;
         var left_bound = xmin + $("#paddle").width() / 2;
         var right_bound = xmax - $("#paddle").width() / 2;
-        px = (e.pageX > left_bound) ? ((e.pageX < right_bound) ? e.pageX - left_bound : xmax - xmin - $("#paddle").width()) : 0;
+        px = (x > left_bound) ? ((x < right_bound) ? x - left_bound : xmax - xmin - $("#paddle").width()) : 0;
         $("#paddle").css({ left: px });
-    }, false);
+    }
+
 
 });
