@@ -149,27 +149,44 @@ function setUpPong() {
     };
     // generates the ball, returns function to perform animation steps
     function Ball() {
-        var R = 8,
-            ball = svg.append('circle')
+        var R = 8;
+        var ball = svg.append('circle')
             .classed("ball", true)
             .attr({
                 r: R,
                 cx: Screen().width / 2,
                 cy: Screen().height / 2
-            }),
+            });
+        var scalex = d3.scale.linear().domain([0, 1]).range([-0.5, 0.5]);
+        var scaley = d3.scale.linear().domain([0, 1]).range([-0.25, 0.25]);
 
-            scalex = d3.scale.linear().domain([0, 1]).range([-0.5, 0.5]),
-            scaley = d3.scale.linear().domain([0, 1]).range([-0.25, 0.25]),
-
-            vector = {
-                x: scalex(Math.random()),
-                y: scaley(Math.random())
-            },
-            speed = 10;
+        function inity() {
+            var abs = (Math.random() * (0.75 - 0.25) + 0.25);
+            if (Math.random() < 0.5) {
+                abs = -1 * abs;
+            }
+            console.log(abs);
+            return abs
+        }
+        var vector = {
+            x: -0.5,
+            y: inity(),
+        };
+        var speed = 8;
 
         var hit_paddle = function(y, paddle) {
-            return y - R > parse(paddle.attr("y")) && y + R < parse(paddle.attr("y")) + parse(paddle.attr("height"));
+            return y +R> parse(paddle.attr("y")) && y-R < parse(paddle.attr("y")) + parse(paddle.attr("height"));
         };
+
+        var hit_ends = function(y, paddle) {
+            var percent = y - parse(paddle.attr("y")) / parse(paddle.attr("height"))
+            if ((percent <= 0.25) || (percent >= 0.75)) {
+                speed = 10;
+            } else if (speed == 10) {
+                speed = 8;
+            }
+        }
+
         var collisions = function() {
             var x = parse(ball.attr("cx")),
                 y = parse(ball.attr("cy")),
@@ -185,6 +202,7 @@ function setUpPong() {
             if (x + R > parse(right_p.attr("x"))) {
                 if (hit_paddle(y, right_p)) {
                     vector.x = -vector.x;
+                    hit_ends(y, right_p);
                 } else {
                     return "left";
                 }
@@ -195,6 +213,7 @@ function setUpPong() {
                 parse(left_p.attr("x")) + parse(left_p.attr("width"))) {
                 if (hit_paddle(y, left_p)) {
                     vector.x = -vector.x;
+                    hit_ends(y, left_p);
                 } else {
                     return "right";
                 }
