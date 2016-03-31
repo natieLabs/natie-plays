@@ -104,8 +104,7 @@ function setUpPong() {
                             $("svg").height() - margin.bottom - height)));
 
 
-            })
-            .origin(function() {
+            }).origin(function() {
                 return {
                     x: parse(area.attr("x")),
                     y: parse(area.attr("y"))
@@ -328,5 +327,6 @@ function setUpPong() {
     run();
 }
 
-
-// $("body").addEventListener('touchstart', function(e) { e.preventDefault(); });
+$('body').on('touchmove', function(e) {
+    e.preventDefault();
+});

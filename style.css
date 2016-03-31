@@ -120,14 +120,14 @@ img {
 }
 
 .centeredheader {
-  left: 0;
-  right: 0;
-  top: 15vh;
-  margin: auto;
-  position: absolute;
-  text-align: center;
-  color: white;
-  font-family: futura-pt, 'Futura Std', Futura, Arial, sans-serif;
+    left: 0;
+    right: 0;
+    top: 15vh;
+    margin: auto;
+    position: absolute;
+    text-align: center;
+    color: white;
+    font-family: futura-pt, 'Futura Std', Futura, Arial, sans-serif;
 }
 
 line {
@@ -141,5 +141,12 @@ line {
         left: 50%;
         transform: translate3d(-50%, -50%, 0);
         position: absolute;
+    }
+}
+
+@media (max-width: 1200px) {
+    div#container {
+        height: 80vmin;
+        width: 80vmin;
     }
 }
