@@ -1,6 +1,57 @@
 $(function() {
+    var bricks = {
+        NUM_BRICKS: 50,
+        BRICKS_PER_ROW: 10,
+        array: null,
+        widthWithMargin: null,
+        width: null,
+        height: 10,
+        outerHeight: null,
+        BRICK_MARGIN: 1,
+        baseline: null,
 
-    var container = $("#container");
+        init: function() {
+            for (var i = 0; i < this.NUM_BRICKS; i++) {
+                container.append('<div class="brick" id="brick' + i + '"></div>')
+            }
+            this.side = container.width();
+            this.array = container.children(".brick");
+            this.widthWithMargin = ~~(side / this.BRICKS_PER_ROW);
+            this.width = this.widthWithMargin - this.BRICK_MARGIN * 2;
+            $(".brick").width(this.width);
+            this.baseline = this.array.last().position().top + this.array.last().height();
+            this.outerHeight = this.height + this.BRICK_MARGIN * 2;
+        },
+
+        get: function(r, c) {
+            var index = r * this.BRICKS_PER_ROW + c;
+            return $("#brick" + index);
+        },
+
+    }
+
+    function collision($div1, $div2) {
+        var x1 = $div1.offset().left;
+        var y1 = $div1.offset().top;
+        var h1 = $div1.outerHeight(true);
+        var w1 = $div1.outerWidth(true);
+        var b1 = y1 + h1;
+        var r1 = x1 + w1;
+        var x2 = $div2.offset().left;
+        var y2 = $div2.offset().top;
+        var h2 = $div2.outerHeight(true);
+        var w2 = $div2.outerWidth(true);
+        var b2 = y2 + h2;
+        var r2 = x2 + w2;
+
+        if (b1 < y2 || y1 > b2 || r1 < x2 || x1 > r2) return false;
+        return true;
+    }
+
+    var container = null;
+
+
+    container = $("#container");
     var xmin = container.offset().left;
     var xmax = container.offset().left + container.width();
     var side = container.width();
@@ -15,30 +66,33 @@ $(function() {
     var paddle = $("#paddle");
     var ball = $("#ball");
 
-    const r = 10;
+    const r = 5;
     const PADDLE_WIDTH = 60;
     const PADDLE_TOP = paddle.position().top;
     const PADDLE_BOTTOM = PADDLE_TOP + paddle.height();
-    const NUM_BRICKS = 50;
-    const BRICKS_PER_ROW = 10;
 
-    ball.width(r);
-    ball.height(r);
+    bricks.init(container);
+
+    ball.width(2 * r);
+    ball.height(2 * r);
     paddle.width(PADDLE_WIDTH);
 
-    var i = 1;
-    for (i = 1; i <= NUM_BRICKS; i++) {
-        container.append('<div class="brick"></div>')
-    }
-    var bricks = $(".brick");
-    var brickWidthWithMargin = ~~(side / BRICKS_PER_ROW);
-    bricks.width(brickWidthWithMargin - 2);
+    // $(".brick").click(function(e) {
+    //     container = $("#container");
+    //     var clickx = e.pageX - container.offset().left;
+    //     var clicky = e.pageY - container.offset().top;
+    //     var row = ( (clicky - 10) / bricks.outerHeight) | 0;
+    //     var col = ~~(clickx / bricks.widthWithMargin);
+    //     console.log(clickx, clicky, row, col);
+    //     bricks.get(row, col).addClass('removed');
+    // })
 
     var cycle = setInterval(function() {
         bx = (ball.position().left + dx) | 0;
         by = (ball.position().top + dy) | 0;
-        var row = ((by - 30) / 14) | 0;
-        var col = (bx / 32) | 0;
+
+        var row = (by / bricks.outerHeight) | 0;
+        var col = (bx / bricks.widthWithMargin) | 0;
 
         // update ball location
         ball.css({ left: bx, top: by });
@@ -64,7 +118,7 @@ $(function() {
 
         // check game ends
         if (by >= side - r && !--lifes) {
-            lifesNode.innerHTML = lifes;
+            $("#lifesNode").html(lifes);
             clearInterval(cycle);
             // alert('Game over!');
         };
@@ -72,25 +126,32 @@ $(function() {
         // hits bottom
         if (by >= side - r && lifes) {
             dy *= -1;
-            $("#lifesNode").innerHTML = lifes;
+            $("#lifesNode").html(lifes);
         }
 
         // remove bricks
-        var brickbaseline = bricks.last().position().top + bricks.last().height();
+        if (by >= 0 && by < bricks.baseline) {
 
-        if (by >= 0 && by <= brickbaseline && container.children()[row * BRICKS_PER_ROW + col].className != 'removed') {
-            dy *= -1, container.children()[row * BRICKS_PER_ROW + col].className = 'removed';
-            if (dx < 0 && (bx % brickWidthWithMargin < 10 || bx % brickWidthWithMargin > 22)) {
-                dx *= -1;
+            var isRemoved = bricks.get(row, col).hasClass("removed");
+            // console.log(bricks.get(row, col), isRemoved);
+            if (!isRemoved) {
+                dy *= -1;
+                bricks.get(row, col).addClass('removed');
+
+                // bounces on left and right walls, flip x direction
+                if (dx < 0 && (bx % bricks.widthWithMargin < r || bx % bricks.widthWithMargin > (r * 2 + 2))) {
+                    dx *= -1;
+                }
+                if (dx > 0 && ((bx + r + 2) % bricks.widthWithMargin < r || (bx + r + 2) % bricks.widthWithMargin > (r * 2 + 2))) {
+                    dx *= -1;
+                }
+                $("#scoreNode").innerHTML = ++score;
+                if (score == bricks.NUM_BRICKS) {
+                    clearInterval(cycle);
+                    // alert('Victory!');
+                };
             }
-            if (dx > 0 && ((bx + 12) % 32 < 10 || (bx + 12) % 32 > 22)) {
-                dx *= -1;
-            }
-            $("#scoreNode").innerHTML = ++score;
-            if (score == NUM_BRICKS) {
-                clearInterval(cycle);
-                // alert('Victory!');
-            };
+
         }
     }, 1000 / 60);
 
@@ -98,4 +159,5 @@ $(function() {
         px = (e.pageX > xmin + $("#paddle").width() / 2) ? ((e.pageX < xmax) ? e.pageX - xmin - $("#paddle").width() / 2 : xmax - xmin - $("#paddle").width()) : 0;
         $("#paddle").css({ left: px });
     }, false);
+
 });
