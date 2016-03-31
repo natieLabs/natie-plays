@@ -10,32 +10,13 @@ div#container {
 }
 
 .brick {
-    background-color: rgb(122, 201, 67);
     /*border-color: #777;*/
     border-radius: 2px;
 }
 
-.brick:nth-child(2n) {
-    background-color: rgb(0, 113, 188);
-}
-
-.brick:nth-child(3n) {
-    background-color: rgb(41, 171, 226);
-}
-.brick:nth-child(5n) {
-    background-color: rgb(255, 147, 30);
-}
-
-.brick:nth-child(7n) {
-    background-color: rgb(133, 96, 168);
-}
-
-.brick:nth-child(11n) {
-    background-color: rgb(204, 204, 204);
-}
-
 .removed {
     border-color: transparent;
+    background-color: transparent !important;
 }
 
 #paddle {
@@ -57,30 +38,11 @@ div#container {
     z-index: 5;
 }
 
-#lifesNode,
-#scoreNode {
+.buttons{
     position: absolute;
-    right: -85px;
-    font: 14px arial, helvetica, sans-serif;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    padding: 1px 0;
-    width: 75px;
-    text-align: center;
+    
 }
 
-#lifesNode {
-    top: 20px;
-}
-
-#lifesNode:before {
-    content: 'lifes: ';
-}
-
-#scoreNode {
-    top: 50px;
-}
-
-#scoreNode:before {
-    content: 'score: ';
+.score {
+  /*margin-top: 50px !important;*/
 }

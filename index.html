@@ -4,32 +4,39 @@
 
 <head>
     <title> natie plays </title>
-    <link rel="stylesheet" href="style.css"> </link>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.1.8/components/grid.min.css"></link>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.1.8/components/container.min.css"></link>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.1.8/semantic.min.css"></link>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.1.8/semantic.min.js"></script>
     <link href='http://fonts.googleapis.com/css?family=Overlock' rel='stylesheet' type='text/css'>
     <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script src="controller.js"></script>
+    <link rel="stylesheet" href="style.css"> </link>
 </head>
-<style>
-body {
-    background-color: #1a1a1a;
-}
-</style>
 
 <body>
+    <div class="pattern"></div>
+    <h1 class="centeredheader">Choose your adventure</h1>
     <div class="ui stackable centered equal width grid container">
         <div class="three wide column">
-            <a href="./snake"><img src="http://semantic-ui.com/images/wireframe/image.png"></img>
-            </a>
+            <div class="selector snake">
+                <a href="./snake"><img class="gameicon" src="snake.svg"></img></a>
+                <a href="./snake" class="navLink"><h2> SNAKE </h2></a>
+                <div class="bottom bar"></div>
+            </div>
         </div>
         <div class="three wide column">
-            <a href="./pong"><img src="http://semantic-ui.com/images/wireframe/image.png"></img>
-            </a>
+            <div class="selector pong">
+                <a href="./pong"><img class="gameicon" src="pong.svg"></img></a>
+                <a href="./pong" class="navLink"><h2> PONG </h2> </a>
+                <div class="bottom bar"></div>
+            </div>
         </div>
         <div class="three wide column">
-            <a href="./arkanoid"><img src="http://semantic-ui.com/images/wireframe/image.png"></img>
-            </a>
+            <div class="selector pong">
+                <a href="./arkanoid"><img class="gameicon" src="arkanoid.png"></img></a>
+                <a href="./arkanoid" class="navLink"><h2> ARKANOID </h2> </a>
+                <div class="bottom bar"></div>
+            </div>
         </div>
     </div>
 </body>

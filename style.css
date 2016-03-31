@@ -22,6 +22,21 @@ rect.food {
     fill: #45720B;
 }
 
+.pattern {
+    background: url("pattern.png") center/cover no-repeat transparent;
+    background: url("pattern.svg") center/cover no-repeat transparent;
+    z-index: 1;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-image-repeat: stretch;
+    pointer-events: none;
+}
+
+img {
+    z-index: 2;
+}
+
 div#container {
     height: 50vmin;
     width: 50vmin;
@@ -31,6 +46,7 @@ div#container {
     bottom: 0;
     right: 0;
     margin: auto;
+    background-color: white;
 }
 
 svg {
@@ -42,20 +58,13 @@ svg {
     margin: auto;
 }
 
-
-/*div#container {
-    border: 4px solid gray;
-}
-*/
-
 .border {
     pointer-events: none;
 }
 
 html,
-body,
-main {
-    background-color: #f2f2f2;
+body {
+    background-color: #ff1d25;
     height: 100%;
     padding: 0;
     margin: 0;
@@ -64,13 +73,61 @@ main {
     box-sizing: border-box;
 }
 
-. text {
+.text {
     font-family: 'Overlock', cursive;
     font-size: 1.5em;
 }
 
 img {
     max-width: 100%;
+}
+
+.selector {
+    background-color: white;
+    width: 100%;
+    height: 100%;
+    position: relative;
+    border-radius: 3px;
+}
+
+.bottom.bar {
+    height: 10px;
+    background-color: #cccccc;
+    bottom: 0;
+    width: 100%;
+    position: absolute;
+    border-bottom-right-radius: 2px;
+    border-bottom-left-radius: 2px;
+}
+
+.navLink {
+    position: absolute;
+    bottom: 10px;
+    left: 0;
+    right: 0;
+    margin: auto;
+    text-align: center;
+    color: #ff1d25;
+    font-weight: 800;
+}
+
+.gameicon {
+    left: 0;
+    right: 0;
+    top: 10px;
+    margin: auto;
+    position: absolute;
+}
+
+.centeredheader {
+  left: 0;
+  right: 0;
+  top: 15vh;
+  margin: auto;
+  position: absolute;
+  text-align: center;
+  color: white;
+  font-family: futura-pt, 'Futura Std', Futura, Arial, sans-serif;
 }
 
 line {
