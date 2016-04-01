@@ -3,7 +3,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0" />
 
 <head>
-    <title> snake </title>
+    <title> arkanoid </title>
     <link rel="stylesheet" href="arkanoid.css"> </link>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.1.8/semantic.min.js"></script>
@@ -11,10 +11,13 @@
     <link rel="stylesheet" href="../style.css"> </link>
     <script src="arkanoid.js" charset="utf-8"></script>
     <script src="rainbowvis.js" charset="utf-8"></script>
+    <script src="../controller.js" charset="utf-8"></script>
 </head>
 
 <body>
     <a href="../"> back </a>
+    <div class="pattern"></div>
+    <div class="cover arkanoid"></div>
     <div id="container">
         <div id="paddle"></div>
         <div id="ball" style="left: 50%; top: 50%;"></div>

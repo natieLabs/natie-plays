@@ -12,9 +12,13 @@ function setUpSnake() {
     food = [{ x: 1, y: 2 }];
     direction = { x: 1, y: 0 };
     nextMoves = [];
+    var side;
 
-    var side = Math.round(Math.min($(window).width(), $(window).height()) / 20) * 10;
-
+    if ($(window).width() < 1200) {
+        side = Math.round(Math.min($(window).width(), $(window).height()) / 12.5) * 10;
+    } else {
+        side = Math.round(Math.min($(window).width(), $(window).height()) / 20) * 10;
+    }
     svg.style('width', side);
     svg.style('height', side);
 
@@ -116,7 +120,7 @@ function setUpSnake() {
             update_food();
             update_snake();
             clearInterval(interval_id);
-            counter =  counter*0.9;
+            counter = counter * 0.9;
             interval_id = setInterval(tick, counter);
         } else {
             snake.pop();

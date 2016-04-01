@@ -10,12 +10,11 @@ body {
     -ms-user-select: none;
     /* IE/Edge */
     user-select: none;
-    /* non-prefixed version, currently
-                                  not supported by any browser */
+    overflow: hidden;
 }
 
 rect.snake {
-    fill: #555353;
+    fill: #ff1d25;
 }
 
 rect.food {
@@ -33,6 +32,36 @@ rect.food {
     pointer-events: none;
 }
 
+.cover {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    opacity: 0.4;
+    filter: alpha(opacity=40);
+}
+
+.snake {
+    background: url("snake/snake.svg") center/contain no-repeat transparent;
+    background: url("snake/snake.png") center/contain no-repeat transparent;
+}
+
+.pong {
+    background: url("pong/pong.svg") center/contain no-repeat transparent;
+    background: url("pong/pong.png") center/contain no-repeat transparent;
+}
+
+.arkanoid {
+    background: url("arkanoid/arkanoid.svg") center/contain no-repeat transparent;
+    background: url("arkanoid/arkanoid.png") center/contain no-repeat transparent;
+}
+
+.ui.secondary.menu {
+  position: absolute !important;
+  width: 100%;
+  z-index: 3;
+}
+
 img {
     z-index: 2;
 }
@@ -46,7 +75,10 @@ div#container {
     bottom: 0;
     right: 0;
     margin: auto;
-    background-color: white;
+    background-color: rgba(255, 255, 255, 0.8);
+    /*border-width: 10px;
+    border-color: white;
+    border-style: solid;*/
 }
 
 svg {
@@ -87,7 +119,7 @@ img {
     width: 100%;
     height: 100%;
     position: relative;
-    border-radius: 3px;
+    border-radius: 5px;
 }
 
 .bottom.bar {
@@ -120,14 +152,14 @@ img {
 }
 
 .centeredheader {
-  left: 0;
-  right: 0;
-  top: 15vh;
-  margin: auto;
-  position: absolute;
-  text-align: center;
-  color: white;
-  font-family: futura-pt, 'Futura Std', Futura, Arial, sans-serif;
+    left: 0;
+    right: 0;
+    top: 15vh;
+    margin: auto;
+    position: absolute;
+    text-align: center;
+    color: white;
+    font-family: futura-pt, 'Futura Std', Futura, Arial, sans-serif;
 }
 
 line {
@@ -141,5 +173,12 @@ line {
         left: 50%;
         transform: translate3d(-50%, -50%, 0);
         position: absolute;
+    }
+}
+
+@media (max-width: 1200px) {
+    div#container {
+        height: 80vmin;
+        width: 80vmin;
     }
 }

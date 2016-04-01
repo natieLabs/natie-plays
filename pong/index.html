@@ -4,12 +4,14 @@
 
 <head>
     <title> pong </title>
-    <link rel="stylesheet" href="../style.css"> </link>
     <link href='http://fonts.googleapis.com/css?family=Overlock' rel='stylesheet' type='text/css'>
     <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.1.8/semantic.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.1.8/semantic.min.css"></link>
+    <link rel="stylesheet" href="../style.css"> </link>
+    <script src="../controller.js" charset="utf-8"></script>
 </head>
-
 <style>
 svg {
     height: 50vmin;
@@ -21,10 +23,19 @@ svg {
     right: 0;
     margin: auto;
 }
+
+@media (max-width: 1200px) {
+    svg {
+        height: 80vmin;
+        width: 80vmin;
+    }
+}
 </style>
 
 <body>
     <a href="../"> back </a>
+    <div class="pattern"></div>
+    <div class="cover pong"></div>
     <div id="container">
         <svg />
     </div>
