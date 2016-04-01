@@ -344,7 +344,3 @@ function setUpPong() {
 
     run();
 }
-
-$('body').on('touchmove', function(e) {
-    e.preventDefault();
-});
