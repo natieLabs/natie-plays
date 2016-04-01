@@ -41,25 +41,61 @@ rect.food {
     filter: alpha(opacity=40);
 }
 
-.snake {
+.cover.snake {
     background: url("snake/snake.svg") center/contain no-repeat transparent;
     background: url("snake/snake.png") center/contain no-repeat transparent;
 }
 
-.pong {
+.cover.pong {
     background: url("pong/pong.svg") center/contain no-repeat transparent;
     background: url("pong/pong.png") center/contain no-repeat transparent;
 }
 
-.arkanoid {
+.cover.arkanoid {
     background: url("arkanoid/arkanoid.svg") center/contain no-repeat transparent;
     background: url("arkanoid/arkanoid.png") center/contain no-repeat transparent;
 }
 
 .ui.secondary.menu {
-  position: absolute !important;
-  width: 100%;
-  z-index: 3;
+    position: absolute !important;
+    width: 100%;
+    z-index: 3;
+}
+
+.ui.nav.grid {
+    position: absolute;
+    /*margin: auto;*/
+    z-index: 3;
+    bottom: 20;
+    left: 0;
+    right: 0;
+    margin: auto;
+}
+
+.nav.column {
+    background-color: white;
+    margin: 10;
+    border-radius: 3px;
+}
+
+.nav.column.home {
+    background-color: #ff1d25;
+    margin: 10;
+    color: white;
+}
+
+.router {
+    color: #ff1d25;
+    text-align: center;
+    text-transform: uppercase;
+}
+
+.router.home {
+    color: white !important;
+}
+
+.pageLink {
+    font-style: italic;
 }
 
 img {
@@ -123,9 +159,11 @@ img {
 }
 
 .bottom.bar {
-    height: 10px;
-    background-color: #cccccc;
+    height: 10%;
+    background-color: rgba(47, 47, 47, 0.4);
     bottom: 0;
+    left: 0;
+    right: 0;
     width: 100%;
     position: absolute;
     border-bottom-right-radius: 2px;
@@ -134,7 +172,7 @@ img {
 
 .navLink {
     position: absolute;
-    bottom: 10px;
+    bottom: 12%;
     left: 0;
     right: 0;
     margin: auto;
@@ -168,7 +206,7 @@ line {
 }
 
 @media (min-width:767px) {
-    .ui.centered {
+    .ui.centered.homepage {
         top: 50%;
         left: 50%;
         transform: translate3d(-50%, -50%, 0);

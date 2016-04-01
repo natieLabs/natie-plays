@@ -189,7 +189,24 @@ function setUpSnake() {
         }
         d3.event.preventDefault();
         nextMoves.push(candidateDirection);
+    });
 
+    var keycodeDict = {
+        "swipeleft": 37,
+        "swipeup": 38,
+        "swiperight": 39,
+        "swipedown": 40,
+    }
+
+    $(document).on("touchstart", function(e){
+      e.preventDefault();
+    })
+
+    $("body").on("swipeup swipedown swipeleft swiperight", function(e) {
+        var type = e.type;
+        var e = jQuery.Event("keydown");
+        e.which = keycodeDict[type]; // # Some key code value
+        $("body").trigger(e);
     })
 }
 
