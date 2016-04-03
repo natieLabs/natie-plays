@@ -204,9 +204,9 @@ line {
 
 @media (min-width:767px) {
     .ui.centered.homepage {
-        top: 50%;
+        top: 70%;
         left: 50%;
-        transform: translate3d(-50%, -50%, 0);
+        transform: translate3d(-50%, -70%, 0);
         position: absolute;
     }
 }
