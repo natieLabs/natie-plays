@@ -301,15 +301,14 @@ function setUpPong() {
     function paddleAI(ball) {
         var x_pos = ball.attr("cx");
 
-        if (x_pos > Screen().width / 2) {
             var y_pos = ball.attr("cy");
             var paddle = d3.select(".right_paddle");
             var diff = -((parse(paddle.attr("y")) + (paddle.attr("height") / 2)) - y_pos);
 
             if (diff < 0 && diff < -2) { // max speed down
-                diff = -2;
+                diff = -4;
             } else if (diff > 0 && diff > 2) { // max speed up
-                diff = 2;
+                diff = 4;
             }
 
             var currentx = parse(paddle.attr("x"));
@@ -318,7 +317,6 @@ function setUpPong() {
             paddle.attr({
                 y: currenty + diff
             });
-        }
     }
 
     // start animation timer that runs until a player scores
