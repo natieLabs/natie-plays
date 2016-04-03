@@ -171,7 +171,9 @@ function setUpPong() {
             x: -0.5,
             y: inity(),
         };
-        var speed = 8;
+        var speedInit = $("svg").width()/35;    // set speed to screen size
+        var speedAccelerated = speedInit * 1.25;
+        var speed = speedInit;
 
         var hit_paddle = function(y, paddle) {
             return y +R> parse(paddle.attr("y")) && y-R < parse(paddle.attr("y")) + parse(paddle.attr("height"));
@@ -180,9 +182,9 @@ function setUpPong() {
         var hit_ends = function(y, paddle) {
             var percent = y - parse(paddle.attr("y")) / parse(paddle.attr("height"))
             if ((percent <= 0.25) || (percent >= 0.75)) {
-                speed = 10;
+                speed = speedAccelerated;
             } else if (speed == 10) {
-                speed = 8;
+                speed = speedInit;
             }
         }
 
@@ -301,15 +303,14 @@ function setUpPong() {
     function paddleAI(ball) {
         var x_pos = ball.attr("cx");
 
-        if (x_pos > Screen().width / 2) {
             var y_pos = ball.attr("cy");
             var paddle = d3.select(".right_paddle");
             var diff = -((parse(paddle.attr("y")) + (paddle.attr("height") / 2)) - y_pos);
 
             if (diff < 0 && diff < -2) { // max speed down
-                diff = -2;
+                diff = -4;
             } else if (diff > 0 && diff > 2) { // max speed up
-                diff = 2;
+                diff = 4;
             }
 
             var currentx = parse(paddle.attr("x"));
@@ -318,7 +319,6 @@ function setUpPong() {
             paddle.attr({
                 y: currenty + diff
             });
-        }
     }
 
     // start animation timer that runs until a player scores
