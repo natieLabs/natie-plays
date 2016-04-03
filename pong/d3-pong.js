@@ -171,7 +171,9 @@ function setUpPong() {
             x: -0.5,
             y: inity(),
         };
-        var speed = 8;
+        var speedInit = $("svg").width()/35;    // set speed to screen size
+        var speedAccelerated = speedInit * 1.25;
+        var speed = speedInit;
 
         var hit_paddle = function(y, paddle) {
             return y +R> parse(paddle.attr("y")) && y-R < parse(paddle.attr("y")) + parse(paddle.attr("height"));
@@ -180,9 +182,9 @@ function setUpPong() {
         var hit_ends = function(y, paddle) {
             var percent = y - parse(paddle.attr("y")) / parse(paddle.attr("height"))
             if ((percent <= 0.25) || (percent >= 0.75)) {
-                speed = 10;
+                speed = speedAccelerated;
             } else if (speed == 10) {
-                speed = 8;
+                speed = speedInit;
             }
         }
 

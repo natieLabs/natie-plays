@@ -2,15 +2,16 @@
  */
 
 $(function() {
-    $(".selector").height($(".selector").width());
-    var remainingHeight = $(".selector").height() - $(".bottom.bar").height() * 2 - $(".navLink").height();
-    $(".gameicon").height(remainingHeight * 0.9);
+
 
     $('body').on('touchmove', function(e) {
         e.preventDefault();
     });
     var page = $(document).find("title").text();
     if (page === "natie plays") {
+        $(".selector").height($(".selector").width());
+        var remainingHeight = $(".selector").height() - $(".bottom.bar").height() * 2 - $(".navLink").height();
+        $(".gameicon").height(remainingHeight * 0.9);
         var gridtop = $(".ui.centered.grid").offset().top;
         var percent = gridtop / 2 / $(window).height() * 100;
         $(".centeredheader").css({ top: percent + "%" });
