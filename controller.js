@@ -9,7 +9,14 @@ $(function() {
     $('body').on('touchmove', function(e) {
         e.preventDefault();
     });
-    var logoHTML = '<div class="ui large secondary menu"> <a class="ui image item" href="http://natie.com"><img src="https://raw.githubusercontent.com/natieLabs/natie-plays/gh-pages/logo.png" class="logo"></img> </a> <div class="right menu"> <div class="ui item"> <h5>NATIE/LABS/PLAY</h5></div> </div> </div>'
+
+    var gridtop = $(".ui.centered.grid").offset().top;
+    var percent = gridtop/2/$(window).height() * 100;
+    $(".centeredheader").css({top: percent+"%"});
+
+    var PAGE_HEADLINE = "PLAY THE 80s. YOU DESERVE A BREAK."
+
+    var logoHTML = '<div class="ui large secondary menu"> <a class="ui image item" href="http://natie.com"><img src="https://raw.githubusercontent.com/natieLabs/natie-plays/gh-pages/logo.png" class="logo"></img> </a> <div class="right menu"> <div class="ui item"> <h5>'+PAGE_HEADLINE+'</h5></div> </div> </div>'
     $("body").prepend(logoHTML);
 
     var navHTML = '<div class="ui nav stackable centered equal width grid container"><div class="nav two wide column home"> <a href="/index.html"> <div class="router home"> <h2> BACK </h2> <div class="bottom bar"></div> </div> </a> </div>';
