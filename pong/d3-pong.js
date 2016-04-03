@@ -171,8 +171,9 @@ function setUpPong() {
             x: -0.5,
             y: inity(),
         };
-        var speedInit = $("svg").width()/35;    // set speed to screen size
-        var speedAccelerated = speedInit * 1.25;
+        var speedInit = $("svg").width()/50;    // set speed to screen size
+        console.log(speedInit)
+        var speedAccelerated = speedInit * 1.2;
         var speed = speedInit;
 
         var hit_paddle = function(y, paddle) {
