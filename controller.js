@@ -33,7 +33,7 @@ $(function() {
             if (pages[i] == page) {
                 continue;
             }
-            navHTML += '<div class="nav two wide column ' + pages[i] + '"> <a href="/natie-plays' + pages[i] + '"> <div class="router ' + pages[i] + '"> <h2>' + pages[i] + '</h2> <div class="bottom bar"></div> </div> </a> </div>';
+            navHTML += '<div class="nav two wide column ' + pages[i] + '"> <a href="/natie-plays/' + pages[i] + '"> <div class="router ' + pages[i] + '"> <h2>' + pages[i] + '</h2> <div class="bottom bar"></div> </div> </a> </div>';
             console.log($(".ui.uav"));
             // $(".ui.uav").append(navButtonHTML);
         }
