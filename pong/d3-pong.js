@@ -11,6 +11,7 @@ function setUpPong() {
     var w = window.innerWidth;
     var h = window.innerHeight;
     var vmin = Math.min(w, h);
+    var GAME_OVER = false;
 
     svg.append("rect")
         .attr("class", "border")
@@ -57,7 +58,6 @@ function setUpPong() {
     // generates a paddle, returns function for updating its position
     var Paddle = function(which) {
         var width = 5;
-
         var area;
 
         if (which == "left") {
@@ -115,20 +115,27 @@ function setUpPong() {
 
         return update;
     };
+
     // generates a score, returns function for updating value and repositioning score
     function Score(x) {
-        var value = 0,
-            score = svg.append('text')
+        var value = 0
+        var score = svg.append('text')
             .text(value);
 
         return function f(inc) {
             value += inc;
 
+            // game over when either party reaches 10 points
+            if (value == 10) {
+                addGameOver();
+                GAME_OVER = true;
+            }
             score.text(value)
                 .attr({
                     x: $("svg").width() * x,
                     y: margin.top + 20
                 });
+
             return f;
         };
     };
@@ -171,13 +178,12 @@ function setUpPong() {
             x: -0.5,
             y: inity(),
         };
-        var speedInit = $("svg").width()/50;    // set speed to screen size
-        console.log(speedInit)
+        var speedInit = $("svg").width() / 60; // set speed to screen size
         var speedAccelerated = speedInit * 1.2;
         var speed = speedInit;
 
         var hit_paddle = function(y, paddle) {
-            return y +R> parse(paddle.attr("y")) && y-R < parse(paddle.attr("y")) + parse(paddle.attr("height"));
+            return y + R > parse(paddle.attr("y")) && y - R < parse(paddle.attr("y")) + parse(paddle.attr("height"));
         };
 
         var hit_ends = function(y, paddle) {
@@ -290,7 +296,8 @@ function setUpPong() {
                 // var leftPaddle = [83, 87].indexOf(currentKeyPressed) != -1;
                 var directionUp = [38, 87].indexOf(currentKeyPressed) != -1;
                 var paddle = d3.select(".left_paddle");
-                var paddleDy = 5 * (directionUp ? -1 : 1);
+                var paddleSpeed = Math.round($("svg").width() / 60);
+                var paddleDy = 8 * (directionUp ? -1 : 1);
                 var newPaddleY = Math.max(margin.top,
                     Math.min(parse(paddle.attr("y")) + paddleDy,
                         Screen().height - margin.bottom - Screen().height * 0.1));
@@ -304,22 +311,22 @@ function setUpPong() {
     function paddleAI(ball) {
         var x_pos = ball.attr("cx");
 
-            var y_pos = ball.attr("cy");
-            var paddle = d3.select(".right_paddle");
-            var diff = -((parse(paddle.attr("y")) + (paddle.attr("height") / 2)) - y_pos);
+        var y_pos = ball.attr("cy");
+        var paddle = d3.select(".right_paddle");
+        var diff = -((parse(paddle.attr("y")) + (paddle.attr("height") / 2)) - y_pos);
 
-            if (diff < 0 && diff < -2) { // max speed down
-                diff = -4;
-            } else if (diff > 0 && diff > 2) { // max speed up
-                diff = 4;
-            }
+        if (diff < 0 && diff < -2) { // max speed down
+            diff = -4;
+        } else if (diff > 0 && diff > 2) { // max speed up
+            diff = 4;
+        }
 
-            var currentx = parse(paddle.attr("x"));
-            var currenty = parse(paddle.attr("y"));
+        var currentx = parse(paddle.attr("x"));
+        var currenty = parse(paddle.attr("y"));
 
-            paddle.attr({
-                y: currenty + diff
-            });
+        paddle.attr({
+            y: currenty + diff
+        });
     }
 
     // start animation timer that runs until a player scores
@@ -333,11 +340,13 @@ function setUpPong() {
 
             movePaddle();
 
-
             if (scored) {
                 d3.select(".ball").remove();
-                ball = Ball();
-                run();
+                if (!GAME_OVER) {
+                    ball = Ball();
+                    run();
+                }
+
             }
             return scored;
         }, 500);
