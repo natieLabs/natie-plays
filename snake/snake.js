@@ -12,13 +12,9 @@ function setUpSnake() {
     food = [{ x: 1, y: 2 }];
     direction = { x: 1, y: 0 };
     nextMoves = [];
-    var side;
+    var side = resize();
 
-    if ($(window).width() < 1200) {
-        side = Math.round(Math.min($(window).width(), $(window).height()) / 12.5) * 10;
-    } else {
-        side = Math.round(Math.min($(window).width(), $(window).height()) / 20) * 10;
-    }
+
     svg.style('width', side);
     svg.style('height', side);
 
@@ -198,8 +194,8 @@ function setUpSnake() {
         "swipedown": 40,
     }
 
-    $(document).on("touchstart", function(e){
-      e.preventDefault();
+    $(document).on("touchstart", function(e) {
+        e.preventDefault();
     })
 
     $("body").on("swipeup swipedown swipeleft swiperight", function(e) {
@@ -211,10 +207,15 @@ function setUpSnake() {
 }
 
 function resize() {
-    var side = Math.round(Math.min($(window).width(), $(window).height()) / 20) * 10;
+    if ($(window).width() < 1200) {
+        side = Math.round(Math.min($(window).width(), $(window).height()) / 4) * 3;
+    } else {
+        side = Math.round(Math.min($(window).width(), $(window).height()) / 20) * 10;
+    }
     svg.style('width', side);
     svg.style('height', side);
     gridsize = $("svg").width() / 10;
+    return side;
 }
 
 $(window).on("resize", resize);
