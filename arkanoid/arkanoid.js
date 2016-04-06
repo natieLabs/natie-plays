@@ -29,9 +29,6 @@ $(function() {
             $(".brick").width(this.width);
             this.baseline = this.array.last().position().top + this.array.last().height();
             this.outerHeight = this.height + this.BRICK_MARGIN * 2;
-
-
-
         },
 
         get: function(r, c) {
@@ -129,12 +126,12 @@ $(function() {
         // check game ends
         if (by >= side - r * 2 && !--lifes) {
             $("#lifesNode").html(lifes);
+            addGameOver();
             clearInterval(cycle);
-            // alert('Game over!');
         };
 
         // hits bottom
-        if (by >= side - r * 2 && lifes) {
+        if (by + r * 2 >= side && lifes) {
             dy *= -1;
             $("#lifesNode").html(lifes);
         }
@@ -147,32 +144,23 @@ $(function() {
                 dy *= -1;
                 bricks.get(row, col).addClass('removed');
 
-                // bounces on left and right walls, flip x direction
+                // bounces on left and right sides of bricks, flip x direction
                 if (dx < 0 && (bx % bricks.widthWithMargin < r || bx % bricks.widthWithMargin > (r * 2 + 2))) {
                     dx *= -1;
                 }
-                if (dx > 0 && ((bx + r + 2) % bricks.widthWithMargin < r || (bx + r + 2) % bricks.widthWithMargin > (r * 2 + 2))) {
+                if (dx > 0 && ((bx + r * 2) % bricks.widthWithMargin < r || (bx + r * 2) % bricks.widthWithMargin > (r * 2))) {
                     dx *= -1;
                 }
                 $("#scoreNode").html(++score);
 
                 //YOU WIN
                 if (score == bricks.NUM_BRICKS) {
+                    addGameOver();
                     clearInterval(cycle);
-
                 };
             }
-
         }
     }, 1000 / 60);
-
-    // document.addEventListener('mousemove', function(e) {
-    //     handleMove(e);
-    // });
-
-    // document.addEventListener('touchmove', function(e) {
-    //   handleMove(e);
-    // });
 
     $(document).bind("mousemove touchmove", function(e) {
         handleMove(e);

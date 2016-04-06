@@ -47,6 +47,6 @@ $(function() {
 function addGameOver() {
   console.log("adding");
     var gameOverHTML = "<div class='gameover'></div>"
-    $("#container").append(gameOverHTML);
+    $("#container").prepend(gameOverHTML);
 
 }
