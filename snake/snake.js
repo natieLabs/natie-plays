@@ -108,6 +108,7 @@ function setUpSnake() {
         if (snake.contains_point(new_beginning) || outside_boundaries(new_beginning)) {
             clearInterval(interval_id);
             // alert('YOU ARE DEAD');
+            addGameOver();
             return;
         }
         if (food.remove_point(new_beginning)) {
