@@ -27,7 +27,7 @@ $(function() {
     }
 
     function createNavButtons() {
-        var navHTML = '<div class="ui nav stackable centered equal width grid container"><div class="nav two wide column home"> <a href="../"> <div class="router home"> <h2> BACK </h2> <div class="bottom bar"></div> </div> </a> </div>';
+        var navHTML = '<div class="ui nav stackable centered equal width grid container"><div class="nav three wide column home"> <a href="../"> <div class="router home"> <h2> BACK </h2> <div class="bottom bar"></div> </div> </a> </div>';
         var divClose = '</div>';
         var pages = ["pong", "snake", "arkanoid"];
 
@@ -36,7 +36,7 @@ $(function() {
             if (pages[i] == page) {
                 continue;
             }
-            navHTML += '<div class="nav two wide column ' + pages[i] + '"> <a href="../' + pages[i] + '"> <div class="router ' + pages[i] + '"> <h2>' + pages[i] + '</h2> <div class="bottom bar"></div> </div> </a> </div>';
+            navHTML += '<div class="nav three wide column ' + pages[i] + '"> <a href="../' + pages[i] + '"> <div class="router ' + pages[i] + '"> <h2>' + pages[i] + '</h2> <div class="bottom bar"></div> </div> </a> </div>';
         }
         navHTML += divClose;
         $("body").append(navHTML);
