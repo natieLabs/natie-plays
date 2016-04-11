@@ -134,6 +134,7 @@ $(function() {
         },
 
         remove: function(r, c) {
+            playSound(this);
             this.get(r, c).addClass("removed");
         },
 
@@ -193,7 +194,7 @@ $(function() {
             };
         },
 
-        update: function(e) {     // respond to mouse movements
+        update: function(e) { // respond to mouse movements
             var x;
             x = (e.type == "mousemove") ? e.pageX : e.originalEvent.touches[0].pageX;
             this.px = (x > this.left_bound) ? ((x < this.right_bound) ? x - this.left_bound : xmax - xmin - this.width) : 0;
@@ -242,5 +243,14 @@ $(function() {
         })
     }
 
+    function playSound(el) {
+        if (el.mp3) {
+            if (el.mp3.paused) el.mp3.play();
+            else el.mp3.pause();
+        } else {
+            el.mp3 = new Audio("blip.mp3");
+            el.mp3.play();
+        }
+    }
 
 });
