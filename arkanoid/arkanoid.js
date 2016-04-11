@@ -1,5 +1,5 @@
 $(function() {
-
+    // calculate page dimensions 
     var container = $("#container");
     var xmin = container.offset().left;
     var xmax = container.offset().left + container.width();
@@ -13,6 +13,9 @@ $(function() {
 
     $("#lifesNode").html(lifes);
 
+    /**
+     * object that represents the ball
+     */
     var ball = {
         r: 5,
         bx: 100,
@@ -46,7 +49,7 @@ $(function() {
 
 
             this.self.css({ left: this.bx, top: this.by });
-            // this.put(this.bx, this.by);
+
             if (this.bx < 0 && this.dx < 0 || this.bx >= side - this.r && this.dx > 0) {
                 this.flipx();
             }
@@ -63,7 +66,7 @@ $(function() {
             }
 
             // hits top
-            if (this.by <= 0) { this.dy *= -1; }
+            if (this.by <= 0) { this.flipy(); }
 
             // check game ends
             if (this.by >= side - this.r * 2 && !--lifes) {
@@ -74,7 +77,7 @@ $(function() {
 
             // hits bottom
             if (this.by + this.r * 2 >= side && lifes) {
-                this.dy *= -1;
+                this.flipy();
                 $("#lifesNode").html(lifes);
             }
         },
@@ -88,7 +91,9 @@ $(function() {
         }
     }
 
-    // object for set of bricks
+    /**
+     * object that represents the set of bricks in the game
+     */
     var bricks = {
         NUM_BRICKS: 50,
         BRICKS_PER_ROW: 10,
@@ -132,21 +137,24 @@ $(function() {
             this.get(r, c).addClass("removed");
         },
 
+        /**
+         * @mutator
+         * changes the direction of the ball and removes bricks during brick & ball collisions
+         */
+
         update: function(ball) {
             if (ball.by >= 0 && ball.by < bricks.baseline) {
 
                 if (!bricks.isRemoved(ball.row, ball.col)) {
-                    ball.dy *= -1;
+                    ball.flipy();
                     bricks.remove(ball.row, ball.col);
 
                     // bounces on left and right sides of bricks, flip x direction
                     if (ball.dx < 0 && (ball.bx % bricks.widthWithMargin < ball.r || ball.bx % bricks.widthWithMargin > (ball.r * 2 + 2))) {
-                        // console.log("hi");
-                        ball.dx *= -1;
+                        ball.flipx();
                     }
                     if (ball.dx > 0 && ((ball.bx + ball.r * 2) % bricks.widthWithMargin < ball.r || (ball.bx + ball.r * 2) % bricks.widthWithMargin > (ball.r * 2))) {
-                        // console.log("hi");
-                        ball.dx *= -1;
+                        ball.flipx();
                     }
                     $("#scoreNode").html(++score);
 
@@ -160,6 +168,9 @@ $(function() {
         }
     }
 
+    /**
+     * object that represents the paddle
+     */
     var paddle = {
         px: 129,
         width: null,
@@ -167,35 +178,69 @@ $(function() {
         top: null,
         bottom: null,
         height: 8,
+        left_bound: null,
+        right_bound: null,
 
         init: function() {
             this.top = this.self.position().top;
             this.bottom = this.top + this.height;
             this.width = side / 5;
             this.self.css({ left: this.px, width: this.width });
+            this.left_bound = xmin + this.width / 2;
+            this.right_bound = xmax - this.width / 2;
+            Number.prototype.clamp = function(min, max) {
+                return Math.min(Math.max(this, min), max);
+            };
         },
 
-        update: function(e) {
-            var x = (e.type == "mousemove") ? e.pageX : e.originalEvent.touches[0].pageX;
-            var left_bound = xmin + this.width / 2;
-            var right_bound = xmax - this.width / 2;
-            this.px = (x > left_bound) ? ((x < right_bound) ? x - left_bound : xmax - xmin - this.width) : 0;
+        update: function(e) {     // respond to mouse movements
+            var x;
+            x = (e.type == "mousemove") ? e.pageX : e.originalEvent.touches[0].pageX;
+            this.px = (x > this.left_bound) ? ((x < this.right_bound) ? x - this.left_bound : xmax - xmin - this.width) : 0;
             this.self.css({ left: this.px });
         }
     }
 
+    var keys = {}; // keeping track of current keys being pressed
+    setupPaddleListeners();
     bricks.init(container);
     ball.init();
     paddle.init();
+    var x; // declare variable outside
 
     var cycle = setInterval(function() {
         ball.update();
         bricks.update(ball);
 
+        if (keys["37"] || keys["39"]) {
+            x = (keys["37"]) ? paddle.px - 8 : paddle.px + 8;
+            paddle.px = x.clamp(0, xmax - xmin - paddle.width);
+            paddle.self.css({ left: paddle.px });
+        }
     }, 1000 / 60);
 
-    $(document).bind("mousemove touchmove", function(e) {
-        paddle.update(e);
-    })
+
+    function setupPaddleListeners() {
+        $(document).bind("mousemove touchmove", function(e) {
+            paddle.update(e);
+        })
+
+        /* Key Codes:
+         * 37 : left,
+         * 39: right
+         */
+        $(document).bind("keydown", function(e) {
+            if ([37, 39].indexOf(e.keyCode) != -1) {
+                keys[e.keyCode] = true;
+            }
+        })
+
+        $(document).bind("keyup", function(e) {
+            if ([37, 39].indexOf(e.keyCode) != -1) {
+                keys[e.keyCode] = false;
+            }
+        })
+    }
+
 
 });
